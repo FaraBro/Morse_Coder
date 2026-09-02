@@ -80,6 +80,7 @@ class morse_coder:
 	@staticmethod
 	def encode(obj: str):
 		result = ""
+		obj = obj.lower()
 		for character in obj:
 			try:
 				result += MORSE_ENCODING_TABLE[character] + ' '
@@ -88,28 +89,49 @@ class morse_coder:
 		
 		return result
 
-
 def main():
-	type = (sys.argv[1].lower() if sys.argv[1].lower() in ['-e', '--encode', '-d', '--decode'] else None) if len(sys.argv) > 1 else None
-	if type:
-		type = type.lstrip('-')
-	else:
+	def parse_args(list_of_args: list):
+		args = {}
+		in_arg = False
+		for arg in list_of_args:
+			if in_arg:
+				args['in'] = arg
+				in_arg = False
+			else:
+				arg = arg.lower()
+				if arg in ['-e', '--encode']:
+					args['type'] = 'encode'
+				elif arg in ['-d', '--decode']:
+					args['type'] = 'decode'
+				elif arg in ['-or', '--only_result']: # Да, да.. or.... Это на будущее.
+					args['only_result'] = True
+				elif arg in ['-i', '--in']:
+					args['cycle'] = False
+					in_arg = True
+					continue
+				elif arg in ['-nc', '--no_cycle']:
+					args['cycle'] = False
+		
+		return args
+	
+	args = parse_args(sys.argv)
+	if not args.get('type'):
 		while True:
-			type = input("Задайте тип кодирования (encode (e)/decode (d)): ").lower()
-			if type in ['e', 'encode', 'decode', 'd']:
+			args['type'] = input("Задайте тип кодирования (encode (e)/decode (d)): ").lower()
+			if args['type'] in ['e', 'encode', 'decode', 'd']:
 				break
 	
-	if type in ['encode', 'e']:
-		type = 'encode'
-		funcForCoding = morse_coder.encode
-	elif type in ['decode', 'd']:
-		type = 'decode'
-		funcForCoding = morse_coder.decode
-	else:
+	funcForCoding = morse_coder.encode if args['type'] == 'encode' else (morse_coder.decode if args['type'] == 'decode' else ValueError)
+	if funcForCoding == ValueError:
 		raise ValueError
 	
+	if args.get('cycle') == None:
+		args['cycle'] = True
 	while True:
-		print(funcForCoding(input("> ").lower()) + '\n')
+		in_data = args.get('in') if args.get('in') else input("> ")
+		print(funcForCoding(in_data) + ('\n' if args['cycle'] else ''))
+		if not args['cycle']:
+			break
 
 if __name__ == '__main__':
 	try:
@@ -119,5 +141,5 @@ if __name__ == '__main__':
 
 """
 Код полная шняга
-FIXME: Работает, но непонятно почему. /j
+FIXME: Оно работает
 """
