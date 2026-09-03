@@ -64,33 +64,26 @@ MORSE_DECODING_TABLE = {
 }
 MORSE_ENCODING_TABLE = {value: key for key, value in MORSE_DECODING_TABLE.items()}
 
-class morse_coder:
+class MorseCoder:
 	@staticmethod
-	def decode(obj: str):
-		result = ""
+	def decode(obj: str) -> str:
+		result = []
 		for character in obj.split(' '):
-			try:
-				result += MORSE_DECODING_TABLE[character]
-			except KeyError:
-				result += '*'
-				continue
+			result.append(MORSE_DECODING_TABLE.get(character, '*'))
 		
-		return result
+		return ''.join(result)
 	
 	@staticmethod
-	def encode(obj: str):
-		result = ""
+	def encode(obj: str) -> str:
+		result = []
 		obj = obj.lower()
 		for character in obj:
-			try:
-				result += MORSE_ENCODING_TABLE[character] + ' '
-			except KeyError:
-				continue
+			result.append(MORSE_ENCODING_TABLE.get(character, '') + ' ')
 		
-		return result
+		return ''.join(result)
 
 def main():
-	def parse_args(list_of_args: list):
+	def parse_args(list_of_args: list) -> dict:
 		args = {}
 		in_arg = False
 		for arg in list_of_args:
@@ -117,16 +110,15 @@ def main():
 	args = parse_args(sys.argv)
 	if not args.get('type'):
 		while True:
-			args['type'] = input("Задайте тип кодирования (encode (e)/decode (d)): ").lower()
-			if args['type'] in ['e', 'encode', 'decode', 'd']:
+			args['type'] = {'e': 'encode', 'encode': 'encode', 'd': 'decode', 'decode': 'decode'}.get(input("Задайте тип кодирования (encode (e)/decode (d)): ").lower())
+			if args['type']:
 				break
 	
-	funcForCoding = morse_coder.encode if args['type'] == 'encode' else (morse_coder.decode if args['type'] == 'decode' else ValueError)
+	funcForCoding = {'encode': MorseCoder.encode, 'decode': MorseCoder.decode}.get(args['type'], ValueError)
 	if funcForCoding == ValueError:
 		raise ValueError
 	
-	if args.get('cycle') == None:
-		args['cycle'] = True
+	args['cycle'] = args.get('cycle', True)
 	while True:
 		in_data = args.get('in') if args.get('in') else input("> ")
 		print(funcForCoding(in_data) + ('\n' if args['cycle'] else ''))
