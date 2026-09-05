@@ -1,3 +1,6 @@
+# Copyright (c) 2026 FaraBro
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
 import sys
 
 MORSE_DECODING_TABLE = {

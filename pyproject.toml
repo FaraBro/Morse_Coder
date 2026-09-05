@@ -1,0 +1,7 @@
+[project]
+name = "Morse_Coder"
+version = "1.0.0"
+description = "Кодировщик азбуки Морзе"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+license-files = ["LICENSE-APACHE", "LICENSE-MIT"]

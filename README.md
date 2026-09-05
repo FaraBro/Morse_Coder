@@ -20,3 +20,9 @@ Python, встроенная библиотека sys :) (очевидно, эт
 ## Данные об разработке
 
 Чашек кофе было выпито при разработке: 1
+
+## LICENSE
+
+This software is made available under the terms of *either* of the licenses
+found in LICENSE-APACHE or LICENSE-MIT. Contributions to this software are made
+under the terms of *both* these licenses.
