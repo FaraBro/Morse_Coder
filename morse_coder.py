@@ -134,7 +134,5 @@ if __name__ == '__main__':
 	except KeyboardInterrupt:
 		sys.exit(130)
 
-"""
-Код полная шняга
-FIXME: Оно работает
-"""
+# Код полная шняга
+# FIXME: Оно работает
